@@ -10,22 +10,19 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-    exit; // Prevent direct access
+    exit;
 }
 
-// Plugin activation hook
-function pp_activate_plugin() {
-    // Code to run on activation
-}
-register_activation_hook( __FILE__, 'pp_activate_plugin' );
+// Define constants
+define( 'PP_VERSION', '1.0.0' );
+define( 'PP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
-// Plugin deactivation hook
-function pp_deactivate_plugin() {
-    // Code to run on deactivation
-}
-register_deactivation_hook( __FILE__, 'pp_deactivate_plugin' );
+// Include core class
+require_once PP_PLUGIN_DIR . 'includes/class-portfolio-plugin.php';
 
-// Test hook
-add_action( 'admin_notices', function () {
-    echo '<div class="notice notice-success"><p>Portfolio Plugin is active 🚀</p></div>';
-});
+// Run plugin
+function run_portfolio_plugin() {
+    $plugin = new Portfolio_Plugin();
+    $plugin->run();
+}
+run_portfolio_plugin();
