@@ -6,6 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once PP_PLUGIN_DIR . 'includes/class-portfolio-loader.php';
 require_once PP_PLUGIN_DIR . 'includes/class-portfolio-cpt.php';
+require_once PP_PLUGIN_DIR . 'includes/class-portfolio-acf.php';
 
 class Portfolio_Plugin {
 
@@ -13,8 +14,10 @@ class Portfolio_Plugin {
 
     public function __construct() {
         $this->loader = new Portfolio_Loader();
+
         $this->define_admin_hooks();
         $this->define_cpt();
+        $this->define_acf_fields(); // ✅ HERE
     }
 
     private function define_admin_hooks() {
@@ -35,18 +38,22 @@ class Portfolio_Plugin {
         );
     }
 
+    // ✅ ADD THIS METHOD INSIDE THE CLASS
+    private function define_acf_fields() {
+        $acf = new Portfolio_ACF();
+
+        $this->loader->add_action(
+            'acf/init',
+            $acf,
+            'register_fields'
+        );
+    }
+
     public function show_admin_notice() {
-        echo '<div class="notice notice-success"><p>Portfolio Plugin is running with CPT 🚀</p></div>';
+        echo '<div class="notice notice-success"><p>Portfolio Plugin is running with CPT + ACF 🚀</p></div>';
     }
 
     public function run() {
         $this->loader->run();
     }
 }
-register_activation_hook( __FILE__, function () {
-    flush_rewrite_rules();
-});
-
-register_deactivation_hook( __FILE__, function () {
-    flush_rewrite_rules();
-});
